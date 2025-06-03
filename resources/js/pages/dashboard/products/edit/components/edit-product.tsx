@@ -48,7 +48,6 @@ const EditProduct = ({ product, categories }: Props) => {
 
     const submit: React.FormEventHandler = (e) => {
         e.preventDefault();
-        console.log(data);
         patch(route('dashboard.products.update', product.id), {
             onError: (error) => {
                 console.log(error);
@@ -60,8 +59,6 @@ const EditProduct = ({ product, categories }: Props) => {
             },
         });
     };
-
-    console.log({ selectedValue });
 
     return (
         <div>

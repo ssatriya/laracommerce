@@ -1,12 +1,25 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/use-cart';
 import { formatCurrency } from '@/lib/utils';
-import { router } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import { CreditCard, Minus, Package, Plus, Shield, Trash2, Truck } from 'lucide-react';
+import * as React from 'react';
+
+type LoginType = {
+    userId: string;
+    totalPrice: number;
+    shippingAddress: string;
+    productList: Array<{
+        id: string;
+        quantity: number;
+    }>;
+};
 
 const CartDetail = () => {
-    const { cart, totalPrice, removeItem, updateQuantity } = useCart();
+    const { cart, totalPrice, removeItem, updateQuantity, clearCart } = useCart();
+    const { auth } = usePage().props;
 
     const handlerRemoveItem = (id: string) => {
         removeItem(id);
@@ -17,6 +30,25 @@ const CartDetail = () => {
                 replace: true,
             },
         );
+    };
+
+    const productList = cart.items.map((item) => ({ id: item.id, quantity: item.quantity }));
+
+    const { data, setData, post } = useForm<Required<LoginType>>({
+        userId: auth.user ? auth.user.id : '',
+        totalPrice: totalPrice,
+        shippingAddress: '',
+        productList: productList,
+    });
+
+    const submit: React.FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('order'), {
+            onFinish: () => {},
+            onSuccess: () => {
+                clearCart();
+            },
+        });
     };
 
     return (
@@ -84,34 +116,52 @@ const CartDetail = () => {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {/* Order Summary */}
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span>Subtotal</span>
-                                    <span>{formatCurrency(totalPrice)}</span>
+                            <form onSubmit={submit}>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span>Subtotal</span>
+                                        <span>{formatCurrency(totalPrice)}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Features */}
-                            <div className="space-y-4 border-t pt-4">
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Package className="text-primary h-4 w-4" />
-                                    <span>Free returns within 30 days</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Shield className="text-primary h-4 w-4" />
-                                    <span>Secure payment</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Truck className="text-primary h-4 w-4" />
-                                    <span>Fast delivery</span>
-                                </div>
-                            </div>
+                                {/* Features */}
+                                <div className="space-y-4 border-t py-4">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Package className="text-primary h-4 w-4" />
+                                        <span>Free returns within 30 days</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Shield className="text-primary h-4 w-4" />
+                                        <span>Secure payment</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Truck className="text-primary h-4 w-4" />
+                                        <span>Fast delivery</span>
+                                    </div>
 
-                            {/* Checkout Button */}
-                            <Button className="w-full">
-                                <CreditCard className="mr-2 h-4 w-4" />
-                                Proceed to Checkout
-                            </Button>
+                                    <Input
+                                        required
+                                        name="shipping_address"
+                                        placeholder="Alamat tujuan"
+                                        value={data.shippingAddress}
+                                        onChange={(e) => setData('shippingAddress', e.target.value)}
+                                    />
+                                </div>
+
+                                {/* Checkout Button */}
+                                {auth.user ? (
+                                    <Button type="submit" className="w-full">
+                                        Lanjutkan ke Pembayaran
+                                    </Button>
+                                ) : (
+                                    <Button className="w-full" asChild>
+                                        <Link href={auth.user ? '' : route('login')}>
+                                            <CreditCard className="mr-2 h-4 w-4" />
+                                            Lanjutkan ke Pembayaran
+                                        </Link>
+                                    </Button>
+                                )}
+                            </form>
                         </CardContent>
                     </Card>
                 </div>

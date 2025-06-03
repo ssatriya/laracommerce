@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-class StoreProductRequest extends FormRequest
+class StoreOrderRequest extends FormRequest
 {
     /**
      * Convert camelCase inputs to snake_case before validation.
@@ -38,10 +38,6 @@ class StoreProductRequest extends FormRequest
         $camelCaseErrors = [];
 
         foreach ($errors as $key => $message) {
-            if (isset($errors['slug'])) {
-                $errors['name'] = $errors['slug'];
-                unset($errors['slug']);
-            }
             $camelCaseKey = Str::camel($key);
             $camelCaseErrors[$camelCaseKey] = $message;
         }
@@ -60,19 +56,7 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('manage products');
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
-    {
-        $name = $this->input('name');
-
-        $this->merge([
-            'slug' => Str::slug($name),
-        ]);
+        return $this->user()->can('buy product');
     }
 
     /**
@@ -83,31 +67,20 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string",
-            "slug" => "required|string|unique:categories,slug",
-            "price" => [
+            'user_id' => 'required|exists:users,id',
+            'total_price' => [
                 'required',
                 'numeric',
                 'min:0',
                 'max:92233720368547758.07',
             ],
-            "quantity" => "required|integer",
-            "description" => "required|string",
-            "images" => "required|array|min:1",
-            "category_id" => "required|string|exists:categories,id",
-        ];
-    }
+            'shipping_address' => 'required|string',
+            // Must be an array with at least one item
+            'product_list' => 'required|array|min:1',
 
-    public function messages(): array
-    {
-        return [
-            "name.required" => "Nama produk wajib diisi",
-            "slug.unique" => "Slug produk sudah digunakan",
-            "price.required" => "Harga produk wajib diisi",
-            "quantity.required" => "Kuantitas produk wajib diisi",
-            "description.required" => "Deskripsi produk wajib diisi",
-            "images.required" => "Wajib memiliki minimal satu gambar",
-            "category_id" => "Kategori produk wajib dipilih"
+            // Each item must have a valid product ID and quantity
+            'product_list.*.id' => 'required|exists:products,id',
+            'product_list.*.quantity' => 'required|integer|min:1',
         ];
     }
 }

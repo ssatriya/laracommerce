@@ -26,7 +26,7 @@ const ProductAction = ({ productId }: Props) => {
     const handleDelete = () => {
         router.delete(route('dashboard.products.destroy', productId), {
             onStart: () => setIsDeleting(true),
-            onError: (data) => console.log(data),
+            onError: (error) => console.log(error),
             onSuccess: () => {
                 toast.success('Produk berhasil dihapus');
             },

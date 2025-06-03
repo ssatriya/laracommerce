@@ -17,12 +17,12 @@ class ImageService
     /**
      * Process image upload and return data for database storage
      */
-    public function processImageUpload(UploadedFile $file, array $validatedData): array
+    public function processImageUpload(UploadedFile $file, array $validatedData, ?string $directory = null): array
     {
         $this->validateImageFile($file);
 
         $filename = $this->generateUniqueFilename($file);
-        $path = $this->storeImageFile($file, $filename);
+        $path = $this->storeImageFile($file, $filename, $directory);
 
         // Get image dimensions
         [$width, $height] = getimagesize($file->getPathname());
@@ -40,30 +40,27 @@ class ImageService
         ];
     }
 
-    // /**
-    //  * Bulk update image order
-    //  */
-    // public function bulkUpdateImageOrder(array $items): int
-    // {
-    //     $updatedCount = 0;
+    /**
+     * Process avatar upload and return data for database storage
+     */
+    public function processAvatarUpload(UploadedFile $file,  ?string $directory = null): array
+    {
+        $this->validateImageFile($file);
 
-    //     // Extract IDs to verify they all exist before updating
-    //     $ids = collect($items)->pluck('id')->toArray();
-    //     $existingImages = Image::whereIn('id', $ids)->pluck('id')->toArray();
+        $filename = $this->generateUniqueFilename($file);
+        $path = $this->storeImageFile($file, $filename, $directory);
 
-    //     if (count($existingImages) !== count($ids)) {
-    //         throw new \InvalidArgumentException('One or more images do not exist');
-    //     }
+        // Get image dimensions
+        [$width, $height] = getimagesize($file->getPathname());
 
-    //     foreach ($items as $item) {
-    //         $updated = Image::where('id', $item['id'])
-    //             ->update(['order' => $item['order']]);
+        return [
+            'filename' => $filename,
+            'path' => $path,
+            'width' => $width,
+            'height' => $height,
+        ];
+    }
 
-    //         $updatedCount += $updated;
-    //     }
-
-    //     return $updatedCount;
-    // }
 
     /**
      * Get publicly accessible URL for an image path
@@ -165,84 +162,15 @@ class ImageService
     /**
      * Store image file to disk
      */
-    private function storeImageFile(UploadedFile $file, string $filename): string
+    private function storeImageFile(UploadedFile $file, string $filename, ?string $directory = null): string
     {
+        $targetDirectory = $directory ?? self::IMAGES_DIRECTORY;
+
         return Storage::disk(self::STORAGE_DISK)
             ->putFileAs(
-                self::IMAGES_DIRECTORY,
+                $targetDirectory,
                 $file,
                 $filename
             ) ?: throw new \RuntimeException('Failed to store image file');
     }
-
-    // /**
-    //  * Delete image file and database record
-    //  */
-    // public function deleteImage(string $imageId): bool
-    // {
-    //     $image = Image::findOrFail($imageId);
-
-    //     // Delete file from storage
-    //     if ($image->path && Storage::disk(self::STORAGE_DISK)->exists($image->path)) {
-    //         Storage::disk(self::STORAGE_DISK)->delete($image->path);
-    //     }
-
-    //     // Delete database record
-    //     return $image->delete();
-    // }
-
-    // /**
-    //  * Validate uploaded image file
-    //  */
-    // private function validateImageFile(UploadedFile $file): void
-    // {
-    //     if (!$file->isValid()) {
-    //         throw new \InvalidArgumentException('Invalid file upload');
-    //     }
-
-    //     $extension = strtolower($file->getClientOriginalExtension());
-    //     if (!in_array($extension, self::ALLOWED_EXTENSIONS)) {
-    //         throw new \InvalidArgumentException('Unsupported file type');
-    //     }
-    // }
-
-    // /**
-    //  * Generate unique filename for uploaded image
-    //  */
-    // private function generateUniqueFilename(UploadedFile $file): string
-    // {
-    //     $extension = $file->getClientOriginalExtension();
-    //     $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-
-    //     // Sanitize filename
-    //     $sanitizedName = Str::slug($originalName);
-
-    //     return sprintf(
-    //         '%s_%s_%s.%s',
-    //         time(),
-    //         Str::random(8),
-    //         $sanitizedName,
-    //         $extension
-    //     );
-    // }
-
-    // /**
-    //  * Store image file to disk
-    //  */
-    // private function storeImageFile(UploadedFile $file, string $filename): string
-    // {
-    //     $path = self::IMAGES_DIRECTORY . '/' . $filename;
-
-    //     $stored = Storage::disk(self::STORAGE_DISK)->putFileAs(
-    //         self::IMAGES_DIRECTORY,
-    //         $file,
-    //         $filename
-    //     );
-
-    //     if (!$stored) {
-    //         throw new \RuntimeException('Failed to store image file');
-    //     }
-
-    //     return $stored;
-    // }
 }

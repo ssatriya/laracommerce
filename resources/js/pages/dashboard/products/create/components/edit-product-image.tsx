@@ -77,9 +77,7 @@ const EditProductImage = ({ files, setFiles, error, productId }: Props) => {
     const onDrop = React.useCallback(
         (acceptedFiles: FileWithPath[], rejectedFiles: FileRejection[]) => {
             setCropperOpen(true);
-            console.log(rejectedFiles);
             acceptedFiles.forEach((file) => {
-                console.log(files);
                 const fileWithPreview = Object.assign(file, {
                     id: ulid(),
                     url: URL.createObjectURL(file),

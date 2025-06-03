@@ -23,7 +23,7 @@ const EditCategory = ({ id, name, innerOpen, outerOpen, setInnerOpen, setOuterOp
         name: '',
     });
 
-    const { patch, data, setData, isDirty, errors, processing, reset, clearErrors, setDefaults } = form;
+    const { patch, isDirty, reset, clearErrors, setDefaults } = form;
 
     React.useMemo(() => {
         setDefaults('name', name);
@@ -39,7 +39,7 @@ const EditCategory = ({ id, name, innerOpen, outerOpen, setInnerOpen, setOuterOp
     const submit: React.FormEventHandler = (e) => {
         e.preventDefault();
         patch(route('dashboard.categories.update', id), {
-            onError: (data) => console.log(data),
+            onError: (error) => console.log(error),
             onSuccess: () => {
                 toast.success('Kategori berhasil diperbarui');
                 setOuterOpen(false);

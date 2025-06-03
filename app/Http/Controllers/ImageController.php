@@ -27,7 +27,7 @@ class ImageController extends Controller
                     $request->file('image'),
                     $request->validated()
                 );
-                // dd($imageData);
+
                 return Image::create($imageData);
             });
 

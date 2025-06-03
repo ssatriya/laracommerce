@@ -36,7 +36,7 @@ export interface SharedData {
 }
 
 export interface User {
-    id: number;
+    id: string;
     name: string;
     email: string;
     avatar?: string;
@@ -133,6 +133,15 @@ export type CartItem = {
 };
 
 export type Cart = {
-    userId: number | null;
+    userId: string | null;
     items: CartItem[];
+};
+
+export type Order = {
+    id: string;
+    userId: string;
+    totalPrice: number;
+    status: string;
+    shippingAddress: string;
+    createdAt: string;
 };

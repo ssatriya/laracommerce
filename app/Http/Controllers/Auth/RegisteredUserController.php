@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\ImageService;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -15,6 +16,10 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        private readonly ImageService $imageService
+    ) {}
+
     /**
      * Show the registration page.
      */
@@ -34,13 +39,22 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'admin_code' => 'nullable|string'
+            'admin_code' => 'nullable|string',
+            'avatar' => 'nullable|image|max:2048'
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $imageData = $this->imageService->processAvatarUpload(
+                $request->file('avatar'),
+                'avatars'
+            );
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'avatar' => $imageData['path'] ?? null,
         ]);
 
         if (isset($request->admin_code) && $request->admin_code == 'REGISTER_AS_ADMIN') {

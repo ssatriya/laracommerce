@@ -96,6 +96,7 @@ export const useCart = () => {
     }, []);
 
     const clearCart = React.useCallback(() => {
+        localStorage.removeItem(CART_KEY);
         setCart({ userId: user?.id || null, items: [] });
     }, [user]);
 

@@ -58,8 +58,6 @@ const CreateProduct = ({ categories }: Props) => {
         });
     };
 
-    console.log(files);
-
     return (
         <div>
             <Heading title="Detail Produk" />

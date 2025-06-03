@@ -7,7 +7,6 @@ const Navbar = () => {
     const { auth } = usePage().props;
     const { cart } = useCart();
 
-    console.log(cart);
     return (
         <>
             <header className="mb-6 w-full text-sm not-has-[nav]:hidden lg:max-w-4xl">

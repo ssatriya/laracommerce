@@ -4,16 +4,20 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductCatalogueController;
 use App\Http\Controllers\ManageProductController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [ProductCatalogueController::class, 'index'])->name('products.index');
 
-Route::get('/products/{product:slug}', [ProductCatalogueController::class, 'show'])->name('products.show');
+Route::post('/order', [OrderController::class, 'placeOrder'])->name('order');
 
 Route::get('/products/cart', function () {
-    return Inertia::render('products/cart/cart');
+    return Inertia::render('products/cart/index');
 })->name('products.cart');
+
+Route::get('/products/{product:slug}', [ProductCatalogueController::class, 'show'])->name('products.show');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -21,6 +25,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', function () {
             return Inertia::render('dashboard/index');
         })->name('index');
+
+        Route::prefix('/my-orders')->name('orders.')->middleware('role:user')->group(function () {
+            Route::get('/', [OrderController::class, 'userOrders'])->name('user.orders');
+        });
+
+        Route::prefix('/manage-orders')->name('orders.')->middleware('role:admin')->group(function () {
+            Route::get('/', [OrderController::class, 'manageOrders'])->name('manage.orders');
+
+            Route::patch('/{order}', [OrderController::class, 'updateStatusOrder'])->name('update.status');
+        });
 
         Route::prefix('/categories')->name('categories.')->middleware('role:admin')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('index');

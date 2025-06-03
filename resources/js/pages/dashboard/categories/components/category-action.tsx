@@ -30,7 +30,7 @@ const CategoryAction = ({ categoryId, categoryLabel }: Props) => {
     const handleDelete = () => {
         router.delete(route('dashboard.categories.destroy', categoryId), {
             onStart: () => setIsDeleting(true),
-            onError: (data) => console.log(data),
+            onError: (error) => console.log(error),
             onSuccess: () => {
                 toast.success('Kategori berhasil dihapus');
             },

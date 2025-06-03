@@ -90,7 +90,7 @@ class UpdateProductRequest extends FormRequest
                 'string',
                 Rule::unique('products', 'slug')->ignore($this->product)
             ],
-            "price" => "required|numeric",
+
             "quantity" => "required|integer",
             "description" => "required|string",
             "images" => "required|array|min:1",

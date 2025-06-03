@@ -15,6 +15,7 @@ type RegisterForm = {
     password: string;
     password_confirmation: string;
     admin_code: string;
+    avatar: File | string;
 };
 
 export default function Register() {
@@ -24,11 +25,13 @@ export default function Register() {
         password: '',
         password_confirmation: '',
         admin_code: '',
+        avatar: '',
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('register'), {
+            forceFormData: true,
             onFinish: () => reset('password', 'password_confirmation'),
         });
     };
@@ -38,6 +41,19 @@ export default function Register() {
             <Head title="Register" />
             <form className="flex flex-col gap-6" onSubmit={submit}>
                 <div className="grid gap-6">
+                    <div className="grid gap-2">
+                        <Label htmlFor="avatar">Avatar</Label>
+                        <Input
+                            id="avatar"
+                            type="file"
+                            tabIndex={1}
+                            autoComplete="off"
+                            onChange={(e) => setData('avatar', e.target.files?.[0] || '')}
+                            disabled={processing}
+                        />
+                        <InputError message={errors.name} className="mt-2" />
+                    </div>
+
                     <div className="grid gap-2">
                         <Label htmlFor="name">Name</Label>
                         <Input

@@ -33,6 +33,24 @@ export function AppSidebar() {
             roles: ['admin', 'user'],
         },
         {
+            title: 'Store',
+            href: '/',
+            icon: LayoutGrid,
+            roles: ['user'],
+        },
+        {
+            title: 'Pesanan Saya',
+            href: '/dashboard/my-orders',
+            icon: LayoutGrid,
+            roles: ['user'],
+        },
+        {
+            title: 'Kelola Pesanan',
+            href: '/dashboard/manage-orders',
+            icon: LayoutGrid,
+            roles: ['admin'],
+        },
+        {
             title: 'Produk',
             href: '/dashboard/products',
             icon: LayoutGrid,

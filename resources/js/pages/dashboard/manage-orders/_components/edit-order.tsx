@@ -1,28 +1,34 @@
-import { Form, FormField, FormInput, FormItem, FormLabel, FormMessage } from '@/components/form/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/form/form';
 import ResponsiveDialog from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
 import * as React from 'react';
 import { toast } from 'sonner';
 
-type FormType = {
-    name: string;
-};
-
 type Props = {
+    id: string;
+    status: string;
     innerOpen: boolean;
     outerOpen: boolean;
     setInnerOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setOuterOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CreateCategory = ({ innerOpen, outerOpen, setInnerOpen, setOuterOpen }: Props) => {
+type FormType = {
+    status: string;
+};
+
+const EditOrder = ({ id, status, innerOpen, outerOpen, setInnerOpen, setOuterOpen }: Props) => {
     const form = useForm<Required<FormType>>({
-        name: '',
+        status: '',
     });
 
-    const { post, data, setData, isDirty, errors, processing, reset, clearErrors } = form;
+    const { data, patch, isDirty, reset, clearErrors, setDefaults, setData } = form;
+
+    React.useMemo(() => {
+        setDefaults('status', status);
+    }, [status]);
 
     React.useEffect(() => {
         if (outerOpen) {
@@ -33,20 +39,22 @@ const CreateCategory = ({ innerOpen, outerOpen, setInnerOpen, setOuterOpen }: Pr
 
     const submit: React.FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('dashboard.categories.store'), {
+        patch(route('dashboard.orders.update.status', id), {
             onError: (error) => console.log(error),
             onSuccess: () => {
-                toast.success('Kategori berhasil disimpan');
+                toast.success('Status berhasil diperbarui');
                 setOuterOpen(false);
                 reset();
             },
+            preserveScroll: true,
+            preserveState: true,
         });
     };
 
     return (
         <ResponsiveDialog
-            title="Tambah kategori"
-            description="Tambah kategori baru melalui form di bawah ini."
+            title="Edit status"
+            description="Edit status pesanan melalui form di bawah ini."
             innerOpen={innerOpen}
             outerOpen={outerOpen}
             setInnerOpen={setInnerOpen}
@@ -60,19 +68,25 @@ const CreateCategory = ({ innerOpen, outerOpen, setInnerOpen, setOuterOpen }: Pr
                         <FormField name="name">
                             <FormItem>
                                 <FormLabel>Nama Kategori</FormLabel>
-                                <FormInput type="text" className="mt-1 block w-full" />
+                                <Select onValueChange={(value) => setData('status', value)} value={data.status}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Status pesanan" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="pending">Pending</SelectItem>
+                                        <SelectItem value="processing">Processing</SelectItem>
+                                        <SelectItem value="completed">Completed</SelectItem>
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         </FormField>
                     </div>
-                    <Button type="submit" className="mt-4 w-full" disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Simpan
-                    </Button>
+                    <Button type="submit">Perbarui</Button>
                 </form>
             </Form>
         </ResponsiveDialog>
     );
 };
 
-export default CreateCategory;
+export default EditOrder;
