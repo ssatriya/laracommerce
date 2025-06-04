@@ -19,7 +19,7 @@ class ImageResource extends JsonResource
         $data = [
             "id" => $this->id,
             "filename" => $this->filename,
-            "path" => asset(Storage::url($this->path)),
+            "path" => Storage::url($this->path),
             "order" => $this->order,
             "product_id" => $this->product_id,
             "created_at" => $this->created_at,
