@@ -25,7 +25,7 @@ const ProductTable = ({ product }: Props) => {
             <div className="border-border rounded-md border">
                 <Table>
                     {product.data.length < 1 && (
-                        <TableCaption className="mb-4">{params.search ? 'Data tidak ditemukan' : 'Belum ada data kategori'}</TableCaption>
+                        <TableCaption className="mb-4">{params.search ? 'Data tidak ditemukan' : 'Belum ada data produk'}</TableCaption>
                     )}
                     <TableHeader>
                         <TableRow>

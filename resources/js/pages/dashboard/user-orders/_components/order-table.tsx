@@ -24,7 +24,7 @@ const OrderTable = ({ order }: Props) => {
             <div className="border-border rounded-md border">
                 <Table>
                     {order.data.length < 1 && (
-                        <TableCaption className="mb-4">{params.search ? 'Data tidak ditemukan' : 'Belum ada data kategori'}</TableCaption>
+                        <TableCaption className="mb-4">{params.search ? 'Data tidak ditemukan' : 'Belum ada data pesanan'}</TableCaption>
                     )}
                     <TableHeader>
                         <TableRow>
