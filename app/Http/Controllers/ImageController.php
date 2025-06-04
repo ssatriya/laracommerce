@@ -75,7 +75,7 @@ class ImageController extends Controller
             return to_route('dashboard.products.edit', $product->id)
                 ->with('success', 'Image uploaded to existing product successfully');
         } catch (\Exception $e) {
-            Log::error('Image upload failed', [
+            Log::error('Image upload for existing product failed', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
                 'request_data' => $request->safe()->toArray()
@@ -142,7 +142,7 @@ class ImageController extends Controller
             return to_route('dashboard.products.edit', $product->id)
                 ->with('success', "Successfully reordered for existing product {$updatedCount} images");
         } catch (\Exception $e) {
-            Log::error('Image reorder failed', [
+            Log::error('Image reorder for existing product failed', [
                 'error' => $e->getMessage(),
                 'user_id' => Auth::id(),
                 'request_data' => $request->safe()->toArray()
