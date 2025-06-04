@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Services\CategoryService;
+use App\Http\Services\ImageService;
 use App\Http\Services\ProductService;
 use App\Models\Image;
 use App\Models\Product;
@@ -19,7 +20,8 @@ class ManageProductController extends Controller
 
     public function __construct(
         ProductService $productService,
-        CategoryService $categoryService
+        CategoryService $categoryService,
+        private readonly ImageService $imageService
     ) {
         $this->productService = $productService;
         $this->categoryService = $categoryService;
@@ -82,6 +84,25 @@ class ManageProductController extends Controller
             return to_route('dashboard.products.index', $product->id);
         } catch (\Throwable $e) {
             return to_route('dashboard.products.index', $product->id)->withErrors('Something went wrong', $e->getMessage());
+        }
+    }
+
+    public function destroy(Product $product)
+    {
+        try {
+            DB::transaction(function () use ($product) {
+                $images = Image::where('product_id', $product->id)->get();
+
+                foreach ($images as $image) {
+                    $this->imageService->deleteImage($image->id);
+                }
+
+                $product->delete();
+            });
+
+            return to_route('dashboard.products.index');
+        } catch (\Throwable $e) {
+            return to_route('dashboard.products.index')->withErrors('Something went wrong', $e->getMessage());
         }
     }
 }

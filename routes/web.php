@@ -56,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{product}/edit',   [ManageProductController::class, 'edit'])->name('edit');
 
             Route::patch('/update/{product}', [ManageProductController::class, 'update'])->name('update');
+
+            Route::delete('/destroy/{product}', [ManageProductController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('/images')->name('images.')->middleware('role:admin')->group(function () {
