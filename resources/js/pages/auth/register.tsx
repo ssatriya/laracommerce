@@ -120,7 +120,10 @@ export default function Register() {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="admin_code">Admin code</Label>
+                        <div className="flex gap-5">
+                            <Label htmlFor="admin_code">Admin code</Label>
+                            <span className="text-muted-foreground text-xs">REGISTER_AS_ADMIN</span>
+                        </div>
                         <Input
                             id="admin_code"
                             type="text"
