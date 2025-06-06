@@ -22,7 +22,7 @@ const CreateCategory = ({ innerOpen, outerOpen, setInnerOpen, setOuterOpen }: Pr
         name: '',
     });
 
-    const { post, data, setData, isDirty, errors, processing, reset, clearErrors } = form;
+    const { post, isDirty, processing, reset, clearErrors } = form;
 
     React.useEffect(() => {
         if (outerOpen) {

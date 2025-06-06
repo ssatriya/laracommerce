@@ -149,8 +149,7 @@ const FormPopover = ({
     commandEmpty,
     ...props
 }: Props & React.ComponentProps<'button'>) => {
-    // const [selectedValue, setSelectedValue] = React.useState('');
-    const { formDescriptionId, formMessageId, error, setData, value, name } = useFormField();
+    const { formDescriptionId, formMessageId, error, setData, name } = useFormField();
 
     const { filters } = usePage().props;
     const { params, setParams, setDebounceTime } = useDebouncedSearch({
