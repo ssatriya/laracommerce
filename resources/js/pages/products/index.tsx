@@ -1,5 +1,5 @@
-import Navbar from '@/pages/products/_components/navbar';
-import ProductList from '@/pages/products/_components/product-list';
+import Navbar from '@/pages/products/components/navbar';
+import ProductList from '@/pages/products/components/product-list';
 import { PaginatedData, Product } from '@/types';
 import { Head } from '@inertiajs/react';
 

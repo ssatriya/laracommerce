@@ -2,7 +2,7 @@ import TableToolbar from '@/components/data-table/table-toolbar';
 import { Button } from '@/components/ui/button';
 import { useDebouncedSearch } from '@/hooks/use-debounce-hooks';
 import AppLayout from '@/layouts/app-layout';
-import OrderTable from '@/pages/dashboard/manage-orders/_components/order-table';
+import OrderTable from '@/pages/dashboard/manage-orders/components/order-table';
 import { BreadcrumbItem, Order, PaginatedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 

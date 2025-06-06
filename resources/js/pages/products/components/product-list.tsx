@@ -1,4 +1,4 @@
-import ProductCard from '@/pages/products/_components/product-card';
+import ProductCard from '@/pages/products/components/product-card';
 import { PaginatedData, Product } from '@/types';
 
 type Props = {

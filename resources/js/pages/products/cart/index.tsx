@@ -1,5 +1,5 @@
-import Navbar from '@/pages/products/_components/navbar';
-import CartDetail from '@/pages/products/cart/_components/cart-detail';
+import CartDetail from '@/pages/products/cart/components/cart-detail';
+import Navbar from '@/pages/products/components/navbar';
 import { Head } from '@inertiajs/react';
 
 const Index = () => {

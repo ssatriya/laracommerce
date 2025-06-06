@@ -1,4 +1,4 @@
-import Thumbnail from '@/pages/products/show/_components/thumbnail';
+import Thumbnail from '@/pages/products/show/components/thumbnail';
 import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import * as React from 'react';

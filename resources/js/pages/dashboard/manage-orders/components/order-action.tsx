@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import EditOrder from '@/pages/dashboard/manage-orders/_components/edit-order';
+import EditOrder from '@/pages/dashboard/manage-orders/components/edit-order';
 import { MoreHorizontal, Pencil } from 'lucide-react';
 import * as React from 'react';
 

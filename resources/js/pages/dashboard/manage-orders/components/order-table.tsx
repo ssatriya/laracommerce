@@ -4,7 +4,7 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { useDebouncedSearch } from '@/hooks/use-debounce-hooks';
 import { useSorting } from '@/hooks/use-sorting';
 import { formatDateTime } from '@/lib/utils';
-import OrderAction from '@/pages/dashboard/manage-orders/_components/order-action';
+import OrderAction from '@/pages/dashboard/manage-orders/components/order-action';
 import { Order, PaginatedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 

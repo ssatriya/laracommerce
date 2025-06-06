@@ -1,6 +1,6 @@
-import Navbar from '@/pages/products/_components/navbar';
-import Carousel from '@/pages/products/show/_components/carousel';
-import ProductDetail from '@/pages/products/show/_components/product-detail';
+import Navbar from '@/pages/products/components/navbar';
+import Carousel from '@/pages/products/show/components/carousel';
+import ProductDetail from '@/pages/products/show/components/product-detail';
 import { Product } from '@/types';
 import { Head } from '@inertiajs/react';
 
